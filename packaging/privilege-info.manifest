@@ -1,0 +1,8 @@
+<manifest>
+	<define>
+		<domain name="privilege-info" />
+	</defind>
+	<request>
+		<domain name="_" />
+	</request>
+</manifest>
