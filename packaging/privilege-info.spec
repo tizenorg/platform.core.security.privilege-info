@@ -54,6 +54,7 @@ echo cmake . -DPREFIX=%{_prefix} \
         -DCMAKE_BUILD_TYPE=%{build_type} \
         -DVERSION=%{version} \
         -DDPL_LOG="ON" \
+        -DDATADIR=%{_datadir} \
         -DPROFILE_TYPE="${__PROFILE_TYPE}"
 
 cmake . -DPREFIX=%{_prefix} \
@@ -63,20 +64,21 @@ cmake . -DPREFIX=%{_prefix} \
         -DCMAKE_BUILD_TYPE=%{build_type} \
         -DVERSION=%{version} \
         -DDPL_LOG="ON" \
+        -DDATADIR=%{_datadir} \
         -DPROFILE_TYPE="${__PROFILE_TYPE}"
 
 make %{?jobs:-j%jobs}
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/license
-cp LICENSE.Apache-2.0 %{buildroot}/usr/share/license/privilege-info
+mkdir -p %{buildroot}%{_datadir}/license
+cp LICENSE.Apache-2.0 %{buildroot}%{_datadir}/license/privilege-info
 
 %make_install
 
 %files -n privilege-info
 %{_libdir}/libprivilege-info.so.*
-/usr/share/license/privilege-info
+%{_datadir}/license/privilege-info
 
 %files -n privilege-info-devel
 %{_libdir}/libprivilege-info.so

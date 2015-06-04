@@ -38,6 +38,6 @@ TARGET_LINK_LIBRARIES(${TARGET_PRIV_INFO_LIB} ${${PACKAGE_NAME}_LDFLAGS})
 
 #######################################################
 
-INSTALL(TARGETS ${PACKAGE_NAME} DESTINATION /usr/lib)
-INSTALL(FILES ${PROJECT_SOURCE_DIR}/include/privilege_information.h DESTINATION /usr/include)
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/privilege-info.pc DESTINATION /usr/lib/pkgconfig)
+INSTALL(TARGETS ${PACKAGE_NAME} DESTINATION ${LIBDIR})
+INSTALL(FILES ${PROJECT_SOURCE_DIR}/include/privilege_information.h DESTINATION ${INCLUDEDIR})
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/privilege-info.pc DESTINATION ${LIBDIR}/pkgconfig)
