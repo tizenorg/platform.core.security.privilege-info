@@ -9,6 +9,7 @@ Source0: %{name}-%{version}.tar.gz
 Requires(post):   /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires: cmake
+BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(dlog)
 BuildRequires: pkgconfig(capi-base-common)
 BuildRequires: pkgconfig(capi-security-privilege-manager)
