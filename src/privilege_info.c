@@ -9,8 +9,9 @@
 #define LOG_TAG "PRIVILEGE_INFO"
 #endif
 
-#define TryReturn(condition, returnValue, ...)  \
+#define TryReturn(condition, expr, returnValue, ...)  \
     if (!(condition)) { \
+		expr; \
         LOGE(__VA_ARGS__); \
         return returnValue; \
     } \
@@ -27,8 +28,8 @@ typedef enum
 
 int privilege_info_get_display_name_string_id(const char* api_version, const char *privilege, char **display_name_string_id)
 {
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     char* temp = NULL;
 
@@ -90,7 +91,7 @@ int privilege_info_get_display_name_string_id(const char* api_version, const cha
 
 err_none:
     *display_name_string_id = (char*)calloc(strlen(temp) + 1, sizeof(char));
-    TryReturn(*display_name_string_id != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
+    TryReturn(*display_name_string_id != NULL, free(temp), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
     memcpy(*display_name_string_id, temp, strlen(temp));
     LOGD("display_name_string_id = %s", *display_name_string_id);
     free(temp);
@@ -110,12 +111,12 @@ err_internal_error:
 int privilege_info_get_display_name_by_string_id(const char *string_id, char **display_name)
 {
     char *temp = NULL;
-    TryReturn(string_id != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] string_id is NULL");
+    TryReturn(string_id != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] string_id is NULL");
 
     temp = dgettext("privilege", string_id);
 
     *display_name = (char*)calloc(strlen(temp) + 1, sizeof(char));
-    TryReturn(*display_name != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+    TryReturn(*display_name != NULL,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
 
     memcpy(*display_name, temp, strlen(temp));
 
@@ -128,33 +129,37 @@ int privilege_info_get_display_name(const char* api_version, const char* privile
     int ret = 0;
     char* display_name_string_id = NULL;
 
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     ret = privilege_info_get_display_name_string_id(api_version, privilege, &display_name_string_id);
-    
+
     if(ret == PRVINFO_ERROR_NO_MATCHING_PRIVILEGE)
     {
-        char tempPrivilege[256] = {0,};
+        char* tempPrivilege = NULL;
         char* token = NULL;
         char* temp = NULL;
-        memcpy(tempPrivilege, privilege, strlen(privilege));
-        
-        token = strtok(tempPrivilege, "/");
+		char* save = NULL;
+
+		tempPrivilege = strdup(privilege);
+		TryReturn(tempPrivilege != NULL, free(tempPrivilege), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] tempPrivilege's strdup is failed.");
+
+        token = strtok_r(tempPrivilege, "/", &save);
         while(token)
         {
             temp = token;
-            token = strtok(NULL, "/");
+            token = strtok_r(NULL, "/", &save);
         }
         *display_name = (char*)calloc(strlen(temp) + 1, sizeof(char));
-        TryReturn(*display_name != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(*display_name != NULL, free(tempPrivilege), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
         memcpy(*display_name, temp, strlen(temp));
+		free(tempPrivilege);
     }
     else if(ret == PRVINFO_ERROR_NONE)
     {
         ret = privilege_info_get_display_name_by_string_id(display_name_string_id, display_name);
         free(display_name_string_id);
-        TryReturn(ret == PRVINFO_ERROR_NONE, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(ret == PRVINFO_ERROR_NONE,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
     }
     else
     {
@@ -166,8 +171,8 @@ int privilege_info_get_display_name(const char* api_version, const char* privile
 
 int privilege_info_get_description_string_id(const char* api_version, const char *privilege, char **description_string_id)
 {
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     char* temp = NULL;
 
@@ -228,7 +233,7 @@ int privilege_info_get_description_string_id(const char* api_version, const char
 
 err_none:
     *description_string_id = (char*)calloc(strlen(temp) + 1, sizeof(char));
-    TryReturn(*description_string_id != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
+    TryReturn(*description_string_id != NULL, free(temp), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
     memcpy(*description_string_id, temp, strlen(temp));
     LOGD("description_string_id = %s", *description_string_id);
     free(temp);
@@ -247,12 +252,12 @@ err_internal_error:
 int privilege_info_get_description_by_string_id(const char *string_id, char **description)
 {
     char *temp = NULL;
-    TryReturn(string_id != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] string_id is NULL");
+    TryReturn(string_id != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] string_id is NULL");
 
     temp = dgettext("privilege", string_id);
 
     *description = (char*)calloc(strlen(temp) + 1, sizeof(char));
-    TryReturn(*description != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+    TryReturn(*description != NULL,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
 
     memcpy(*description, temp, strlen(temp));
 
@@ -265,8 +270,8 @@ int privilege_info_get_description(const char* api_version, const char* privileg
     int ret = 0;
     char* description_string_id = NULL;
 
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     ret = privilege_info_get_description_string_id(api_version, privilege, &description_string_id);
 
@@ -275,7 +280,7 @@ int privilege_info_get_description(const char* api_version, const char* privileg
         char* temp = NULL;
         temp = dgettext("privilege", "IDS_TPLATFORM_BODY_THIS_PRIVILEGE_IS_NOT_DEFINED");
         *description = (char*)calloc(strlen(temp) + 1, sizeof(char));
-        TryReturn(*description != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(*description != NULL,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
 
         memcpy(*description, temp, strlen(temp));
     }
@@ -283,7 +288,7 @@ int privilege_info_get_description(const char* api_version, const char* privileg
     {
         ret = privilege_info_get_description_by_string_id(description_string_id, description);
         free(description_string_id);
-        TryReturn(ret == PRVINFO_ERROR_NONE, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(ret == PRVINFO_ERROR_NONE,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
     }
     else
     {
@@ -294,9 +299,9 @@ int privilege_info_get_description(const char* api_version, const char* privileg
 
 int privilege_info_get_display_name_string_id_by_pkgtype(const char* package_type, const char* api_version, const char *privilege, char **display_name_string_id)
 {
-    TryReturn(package_type != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(package_type != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     char* temp = NULL;
 
@@ -371,7 +376,7 @@ int privilege_info_get_display_name_string_id_by_pkgtype(const char* package_typ
 
 err_none:
     *display_name_string_id = (char*)calloc(strlen(temp) + 1, sizeof(char));
-    TryReturn(*display_name_string_id != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
+    TryReturn(*display_name_string_id != NULL, free(temp), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
     memcpy(*display_name_string_id, temp, strlen(temp));
     LOGD("display_name_string_id = %s", *display_name_string_id);
     free(temp);
@@ -393,33 +398,36 @@ int privilege_info_get_display_name_by_pkgtype(const const char* package_type, c
     int ret = 0;
     char* display_name_string_id = NULL;
 
-    TryReturn(package_type != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(package_type != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     ret = privilege_info_get_display_name_string_id_by_pkgtype(package_type, api_version, privilege, &display_name_string_id);
 
     if(ret == PRVINFO_ERROR_NO_MATCHING_PRIVILEGE)
     {
-        char tempPrivilege[256] = {0,};
+        char* tempPrivilege = NULL;
         char* token = NULL;
         char* temp = NULL;
-        memcpy(tempPrivilege, privilege, strlen(privilege));
-        token = strtok(tempPrivilege, "/");
+		char* save = NULL;
+        tempPrivilege = strdup(privilege);
+		TryReturn(tempPrivilege != NULL, free(tempPrivilege), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] tempPrivilege's strdup is failed.");
+        token = strtok_r(tempPrivilege, "/", &save);
         while(token)
         {
             temp = token;
-            token = strtok(NULL, "/");
+            token = strtok_r(NULL, "/", &save);
         }
         *display_name = (char*)calloc(strlen(temp) + 1, sizeof(char));
-        TryReturn(*display_name != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(*display_name != NULL, free(tempPrivilege), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
         memcpy(*display_name, temp, strlen(temp));
+		free(tempPrivilege);
     }
     else if(ret == PRVINFO_ERROR_NONE)
     {
         ret = privilege_info_get_display_name_by_string_id(display_name_string_id, display_name);
         free(display_name_string_id);
-        TryReturn(ret == PRVINFO_ERROR_NONE, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(ret == PRVINFO_ERROR_NONE,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
     }
     else
     {
@@ -431,9 +439,9 @@ int privilege_info_get_display_name_by_pkgtype(const const char* package_type, c
 
 int privilege_info_get_description_string_id_by_pkgtype(const char* package_type, const char* api_version, const char *privilege, char **description_string_id)
 {
-    TryReturn(package_type != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(package_type != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     char* temp = NULL;
 
@@ -510,7 +518,7 @@ int privilege_info_get_description_string_id_by_pkgtype(const char* package_type
 
 err_none:
     *description_string_id = (char*)calloc(strlen(temp) + 1, sizeof(char));
-    TryReturn(*description_string_id != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
+    TryReturn(*description_string_id != NULL, free(temp), PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation is failed.");
     memcpy(*description_string_id, temp, strlen(temp));
     LOGD("description_string_id = %s", *description_string_id);
     free(temp);
@@ -532,9 +540,9 @@ int privilege_info_get_description_by_pkgtype(const char* package_type, const ch
     int ret = 0;
     char* description_string_id = NULL;
 
-    TryReturn(package_type != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
-    TryReturn(api_version != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
-    TryReturn(privilege != NULL, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
+    TryReturn(package_type != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] package_type is NULL");
+    TryReturn(api_version != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] api_version is NULL");
+    TryReturn(privilege != NULL,, PRVINFO_ERROR_INVALID_PARAMETER, "[PRVINFO_ERROR_INVALID_PARAMETER] privilege is NULL");
 
     ret = privilege_info_get_description_string_id_by_pkgtype(package_type, api_version, privilege, &description_string_id);
 
@@ -543,7 +551,7 @@ int privilege_info_get_description_by_pkgtype(const char* package_type, const ch
         char* temp = NULL;
         temp = dgettext("privilege", "IDS_TPLATFORM_BODY_THIS_PRIVILEGE_IS_NOT_DEFINED");
         *description = (char*)calloc(strlen(temp) + 1, sizeof(char));
-        TryReturn(*description != NULL, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(*description != NULL,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
         memcpy(*description, temp, strlen(temp));
         //return PRVINFO_ERROR_NO_MATCHING_PRIVILEGE;
     }
@@ -551,7 +559,7 @@ int privilege_info_get_description_by_pkgtype(const char* package_type, const ch
     {
         ret = privilege_info_get_description_by_string_id(description_string_id, description);
         free(description_string_id);
-        TryReturn(ret == PRVINFO_ERROR_NONE, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
+        TryReturn(ret == PRVINFO_ERROR_NONE,, PRVINFO_ERROR_OUT_OF_MEMORY, "[PRVINFO_ERROR_OUT_OF_MEMORY] Memory allocation failed.");
     }
     else
     {

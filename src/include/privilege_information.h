@@ -30,7 +30,7 @@ extern "C" {
 
 /**
  * @brief Enumerations of error code for Privilege Information.
- * @since_tizen 2.3
+ * @since_tizen @if WEARABLE 2.3.1 @elseif MOBILE 2.3 @endif
  */
 typedef enum
 {
@@ -43,7 +43,7 @@ typedef enum
 
 /**
  * @brief Gets the display name of the given privilege.
- * @since_tizen 2.3
+ * @since_tizen @if WEARABLE 2.3.1 @elseif MOBILE 2.3 @endif
  * @remarks @a display_name must be released with free() by you.
  * @param [in] api_version The version of API
  * @param [in] privilege The privilege
@@ -58,7 +58,7 @@ int privilege_info_get_display_name(const char* api_version, const char* privile
 
 /**
  * @brief Gets the display name of the given privilege.
- * @since_tizen 2.3
+ * @since_tizen @if WEARABLE 2.3.1 @elseif MOBILE 2.3 @endif
  * @remarks @a display_name must be released with free() by you.
  * @remarks package_type must be one of followings: PRVINFO_PACKAGE_TYPE_NATIVE, PRVINFO_PACKAGE_TYPE_WEB
  * @param [in] package_type The type of application package
@@ -75,7 +75,7 @@ int privilege_info_get_display_name_by_pkgtype(const char* package_type, const c
 
 /**
  * @brief Gets the description of the given privilege.
- * @since_tizen 2.3
+ * @since_tizen @if WEARABLE 2.3.1 @elseif MOBILE 2.3 @endif
  * @remarks @a description must be released with free() by you.
  * @param [in] api_version The version of API
  * @param [in]  privilege The privilege
@@ -90,15 +90,15 @@ int privilege_info_get_description(const char* api_version, const char *privileg
 
 /**
  * @brief Gets the description of the given privilege.
- * @since_tizen 2.3
+ * @since_tizen @if WEARABLE 2.3.1 @elseif MOBILE 2.3 @endif
  * @remarks @a description must be released with free() by you.
- * @remarks package_type must be one of followings: PRVINFO_PACKAGE_TYPE_NATIVE, PRVINFO_PACKAGE_TYPE_WEB 
+ * @remarks package_type must be one of followings: PRVINFO_PACKAGE_TYPE_NATIVE, PRVINFO_PACKAGE_TYPE_WEB
  * @param [in] package_type The type of application package
  * @param [in] api_version The version of API
  * @param [in]  privilege The privilege
  * @param [out] description The description of the privilege
  * @return 0 on success, otherwise a negative error value.
- * @retval #PRVINFO_ERROR_NONE Successful                                                                                                                                            
+ * @retval #PRVINFO_ERROR_NONE Successful
  * @retval #PRVINFO_ERROR_OUT_OF_MEMORY Out of memory
  * @retval #PRVINFO_ERROR_INVALID_PARAMETER Invalid function parameter
  * @retval #PRVINFO_ERROR_INTERNAL_ERROR Unknown error
