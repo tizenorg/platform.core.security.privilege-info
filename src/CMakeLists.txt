@@ -8,7 +8,7 @@ SET(PRIV_INFO_SOURCES
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
-SET(requires glib-2.0 dlog capi-security-privilege-manager)
+SET(requires glib-2.0 dlog security-privilege-manager)
 INCLUDE(FindPkgConfig)
 pkg_check_modules(${PACKAGE_NAME} REQUIRED ${requires})
 FOREACH(flag ${${PACKAGE_NAME}_CFLAGS})
