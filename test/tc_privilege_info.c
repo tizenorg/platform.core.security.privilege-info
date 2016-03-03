@@ -40,6 +40,8 @@ static const char* __get_result_string(privilege_info_error_e ret)
 		return "PRVINFO_ERROR_OUT_OF_MEMORY";
 	else if (ret == PRVINFO_ERROR_INTERNAL_ERROR)
 		return "PRVINFO_ERROR_INTERNAL_ERROR";
+
+	return "PRVINFO_ERROR_NO_MATCHED_ERROR_MESSAGE";
 }
 
 static void __check_get_privilege_display_name_result(privilege_info_error_e expected_result, privilege_info_error_e result, const char* display_name)
