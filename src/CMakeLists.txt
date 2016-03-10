@@ -16,7 +16,7 @@ FOREACH(flag ${${PACKAGE_NAME}_CFLAGS})
 ENDFOREACH(flag)
 
 # Compiler flags
-SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} -fPIC -Wall -fvisibility=hidden -D_WITH_SYSTEMD_")
+SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} -fPIC -fvisibility=hidden -D_WITH_SYSTEMD_")
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} ${PACKAGE_NAME_CFLAGS}")
 
 ########################################################

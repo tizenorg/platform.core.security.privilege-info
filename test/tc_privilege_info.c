@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <privilege_information.h>
 
 #define BRIGHTNESS 0
@@ -383,4 +384,5 @@ int main()
 	printf("fail : %d\n", fail_cnt);
 	__change_color_to_origin();
 
+	return 0;
 }

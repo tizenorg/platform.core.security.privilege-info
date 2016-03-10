@@ -19,7 +19,6 @@ Privilege Information
 
 %package -n privilege-info-devel
 Summary: Privilege Info API (Development)
-Group: TO_BE/FILLED_IN
 Requires: %{name} = %{version}-%{release}
 
 %description -n privilege-info-devel
@@ -27,7 +26,6 @@ The Privilege Info API provides functions to get privilege information (DEV)
 
 %package -n tc-privilege-info
 Summary: tc-privilege-info
-Group: TO_BE/FILLED_IN
 Requires: %{name} = %{version}-%{release}
 
 %description -n tc-privilege-info
