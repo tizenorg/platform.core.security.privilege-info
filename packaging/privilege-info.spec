@@ -78,6 +78,7 @@ cp LICENSE.Apache-2.0 %{buildroot}%{_datadir}/license/privilege-info
 %files -n privilege-info
 %{_libdir}/libprivilege-info.so.*
 %{_datadir}/license/privilege-info
+%manifest packaging/privilege-info.manifest
 
 %files -n privilege-info-devel
 %{_libdir}/libprivilege-info.so
