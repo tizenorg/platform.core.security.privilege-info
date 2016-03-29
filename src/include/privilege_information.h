@@ -32,12 +32,11 @@ extern "C" {
  * @brief Enumerations of error code for Privilege Information.
  * @since_tizen @if WEARABLE 2.3.1 @elseif MOBILE 2.3 @endif
  */
-typedef enum
-{
-    PRVINFO_ERROR_NONE                         = TIZEN_ERROR_NONE, /**< Successful */
-    PRVINFO_ERROR_INVALID_PARAMETER            = TIZEN_ERROR_INVALID_PARAMETER, /**< Invalid function parameter */
-    PRVINFO_ERROR_OUT_OF_MEMORY                = TIZEN_ERROR_OUT_OF_MEMORY, /**< Out of memory */
-    PRVINFO_ERROR_INTERNAL_ERROR               = TIZEN_ERROR_UNKNOWN, /**< Unknown error */
+typedef enum {
+	PRVINFO_ERROR_NONE						 = TIZEN_ERROR_NONE, /**< Successful */
+	PRVINFO_ERROR_INVALID_PARAMETER			= TIZEN_ERROR_INVALID_PARAMETER, /**< Invalid function parameter */
+	PRVINFO_ERROR_OUT_OF_MEMORY				= TIZEN_ERROR_OUT_OF_MEMORY, /**< Out of memory */
+	PRVINFO_ERROR_INTERNAL_ERROR			   = TIZEN_ERROR_UNKNOWN, /**< Unknown error */
 } privilege_info_error_e;
 
 
@@ -112,4 +111,4 @@ int privilege_info_get_description_by_pkgtype(const char* package_type, const ch
 }
 #endif
 
-#endif // __TIZEN_SECURITY_PRIVILEGE_INFO_H
+#endif /* __TIZEN_SECURITY_PRIVILEGE_INFO_H */

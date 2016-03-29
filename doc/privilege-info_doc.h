@@ -19,14 +19,14 @@
 /**
  * @ingroup CAPI_SECURITY_FRAMEWORK
  * @defgroup CAPI_SECURITY_FRAMEWORK_PRIVILEGE_INFO_MODULE Privilege Info
- * 
+ *
  *
  * @section CAPI_SECURITY_FRAMEWORK_PRIVILEGE_INFO_MODULE_HEADER Requires Header
  *      \#include <privilege_information.h>
  *
  * @section CAPI_SECURITY_FRAMEWORK_PRIVILEGE_INFO_MODULE_OVERVIEW Overview
- * A library for reading privilege information of the given privilege and API issue version. 
- * It provides the display name or description of privileges. 
+ * A library for reading privilege information of the given privilege and API issue version.
+ * It provides the display name or description of privileges
  * If there's no matching privilege then it shows last token of given privilege or description string for undefined privileges.
  */
 
