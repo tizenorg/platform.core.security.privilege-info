@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TIZEN_SECURITY_PRIVILEGE_INFO_H
-#define __TIZEN_SECURITY_PRIVILEGE_INFO_H
+#ifndef __TIZEN_SECURITY_PRIVILEGE_INFORMAION_H
+#define __TIZEN_SECURITY_PRIVILEGE_INFORMAION_H
 
 #include <tizen.h>
 
@@ -111,4 +111,4 @@ int privilege_info_get_description_by_pkgtype(const char* package_type, const ch
 }
 #endif
 
-#endif /* __TIZEN_SECURITY_PRIVILEGE_INFO_H */
+#endif /* __TIZEN_SECURITY_PRIVILEGE_INFORMAION_H */
