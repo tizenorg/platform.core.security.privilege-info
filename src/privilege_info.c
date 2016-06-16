@@ -323,7 +323,9 @@ int privilege_info_get_display_name_by_pkgtype(const const char* package_type, c
 
 	ret = privilege_info_get_display_name_string_id_by_pkgtype(package_type, api_version, privilege, &display_name_string_id);
 
-	if (ret == PRVINFO_ERROR_NO_MATCHING_PRIVILEGE) {
+	if (ret == PRVINFO_ERROR_INVALID_PARAMETER) {
+        return ret;
+    } else if (ret == PRVINFO_ERROR_NO_MATCHING_PRIVILEGE) {
 		char* tempPrivilege = NULL;
 		char* token = NULL;
 		char* temp = NULL;
@@ -433,7 +435,9 @@ int privilege_info_get_description_by_pkgtype(const char* package_type, const ch
 
 	ret = privilege_info_get_description_string_id_by_pkgtype(package_type, api_version, privilege, &description_string_id);
 
-	if (ret == PRVINFO_ERROR_NO_MATCHING_PRIVILEGE) {
+	if (ret == PRVINFO_ERROR_INVALID_PARAMETER) {
+		return ret;
+	} else if (ret == PRVINFO_ERROR_NO_MATCHING_PRIVILEGE) {
 		char* temp = NULL;
 		temp = dgettext("privilege", "IDS_TPLATFORM_BODY_THIS_PRIVILEGE_IS_NOT_DEFINED");
 		*description = (char*)calloc(strlen(temp) + 1, sizeof(char));
